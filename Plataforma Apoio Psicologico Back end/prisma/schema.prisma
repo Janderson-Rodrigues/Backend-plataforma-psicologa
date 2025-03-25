@@ -1,0 +1,106 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
+// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+// testado no isomnia
+model GrupoApoio {
+  id_grupo  Int     @id @default(autoincrement())
+  nome      String
+  descricao String?
+  regiao    String
+}
+
+// testado no isomnia
+model Depoimento {
+  id_depoimento Int      @id @default(autoincrement())
+  texto         String
+  data_envio    DateTime @default(now())
+}
+
+// testado no isomnia
+model Usuario {
+  id_usuario Int    @id @default(autoincrement())
+  nome       String
+  email      String @unique
+  senha      String
+  tipo       String // "Paciente" ou "Profissional"
+
+  // Relacionamentos
+  avaliacoes   Avaliacao[]
+  paciente     Paciente?
+  profissional Profissional?
+}
+
+// testado no isomnia
+model Paciente {
+  id_paciente     Int      @id @default(autoincrement())
+  id_usuario      Int      @unique
+  data_nascimento DateTime
+  genero          String
+
+  usuario   Usuario    @relation(fields: [id_usuario], references: [id_usuario])
+  consultas Consulta[]
+  anamneses Anamnese[]
+}
+
+// testado no isomnia
+model Profissional {
+  id_profissional          Int         @id @default(autoincrement())
+  id_usuario               Int         @unique
+  crp                      String // Matrícula do profissional (exemplo: CRP, CRQ)
+  especialidade            String
+  localizacao              String
+  faixa_etaria_atendimento String
+  atendimentos_gratuitos   Int
+  disponibilidade          String
+  foto                     String?
+  preco_consulta           Float
+  avaliacoes               Avaliacao[]
+  usuario                  Usuario     @relation(fields: [id_usuario], references: [id_usuario])
+  consultas                Consulta[]
+}
+
+
+// testado no isomnia
+model Consulta {
+  id_consulta     Int      @id @default(autoincrement())
+  id_profissional Int
+  id_paciente     Int
+  data_hora       DateTime
+  status          String // "Agendada", "Realizada", "Cancelada"
+
+  profissional Profissional @relation(fields: [id_profissional], references: [id_usuario])
+  paciente     Paciente     @relation(fields: [id_paciente], references: [id_usuario])
+}
+
+model Anamnese {
+  id_anamnese      Int      @id @default(autoincrement())
+  id_paciente      Int
+  data             DateTime @default(now())
+  sintomas         String
+  uso_medicamentos String
+  objetivo_terapia String
+  paciente         Paciente @relation(fields: [id_paciente], references: [id_paciente])
+}
+
+model Avaliacao {
+  id_avaliacao    Int          @id @default(autoincrement())
+  id_usuario      Int
+  id_profissional Int
+  data_avaliacao  DateTime     @default(now())
+  nota            Int
+  comentario      String?
+  usuario         Usuario      @relation(fields: [id_usuario], references: [id_usuario])
+  profissional    Profissional @relation(fields: [id_profissional], references: [id_usuario])
+}
