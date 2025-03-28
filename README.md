@@ -15,7 +15,7 @@ Gabriel Bezerra
 ## Equipe:
 - Luiz Felipe Martins de Araujo
 - Janderson Carneiro Rodrigues
-- Anildo 
+- Anildo da Silva Gomes
 
 
 # Técnologias Utilizadas:
@@ -25,10 +25,6 @@ Gabriel Bezerra
 | Front-End | React, Tailwind CSS                       |
 | Back-End  | Node, Prisma, Express, Axios, PostgresSQL |
 | Design    | Figma                                     |
-
-# Modelagem do Banco de Dados
-
-// Adicionar Prints
 
 # Como Executar
 
